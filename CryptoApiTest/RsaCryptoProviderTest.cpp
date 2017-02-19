@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 
 #include "../CryptoApi/Base64.h"
-#include "../CryptoApi/Signing.h"
+#include "../CryptoApi/RsaCryptoProvider.h"
 
 #include <iostream>
 

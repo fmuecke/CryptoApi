@@ -24,12 +24,6 @@
     <ClInclude Include="..\CryptoApi\Base64.h">
       <Filter>CryptoApi</Filter>
     </ClInclude>
-    <ClInclude Include="..\CryptoApi\RsaCryptor.h">
-      <Filter>CryptoApi</Filter>
-    </ClInclude>
-    <ClInclude Include="MessageSigner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CryptoApi\SysError.h">
       <Filter>CryptoApi</Filter>
     </ClInclude>
@@ -39,24 +33,18 @@
     <ClInclude Include="..\CryptoApi\RsaCryptoProvider.h">
       <Filter>CryptoApi</Filter>
     </ClInclude>
-    <ClInclude Include="..\CryptoApi\Signing.h">
-      <Filter>CryptoApi</Filter>
-    </ClInclude>
     <ClInclude Include="..\CryptoApi\Conversion.h">
       <Filter>CryptoApi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RsaCryptorTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Base64Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringManipTest.cpp">
+    <ClCompile Include="RsaCryptoProviderTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RsaCryptoProviderTest.cpp">
+    <ClCompile Include="ConversionTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
