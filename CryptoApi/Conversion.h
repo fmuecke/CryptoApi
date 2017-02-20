@@ -33,6 +33,12 @@ namespace CryptoApi
 			return BinaryToHex(reinterpret_cast<const unsigned char*>(pData), dataLen);
 		}
 
+		template<typename Container>
+		static std::string BinaryToHex(Container const& data)
+		{
+			return BinaryToHex(data.data(), static_cast<unsigned int>(data.size()));
+		}
+
 		namespace _detail
 		{
 			// Returns 0x00 if no valid hex byte

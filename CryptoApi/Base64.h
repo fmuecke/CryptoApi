@@ -30,7 +30,13 @@ namespace CryptoApi
 			return std::move(std::string());
 		}
 
-		static std::vector<unsigned char> Decode(std::string base64data)
+		template<typename Container>
+		static std::string Encode(Container const& data)
+		{
+			return Encode(data.data(), static_cast<unsigned long>(data.size()));
+		}
+
+		static std::vector<unsigned char> Decode(std::string const& base64data)
 		{
 			unsigned long decodedSize{ 0 };
 			if (::CryptStringToBinaryA(base64data.data(), static_cast<DWORD>(base64data.size()), CRYPT_STRING_BASE64, nullptr, &decodedSize, nullptr, nullptr))
