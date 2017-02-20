@@ -12,6 +12,11 @@ using namespace std;
 
 namespace CryptoApiTest
 {
+	// generated with http://travistidwell.com/jsencrypt/demo/
+	// or via openssl
+	//    openssl genrsa -out rsa_1024_priv.pem 1024
+	//    openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
+
 	static const char* const PrivateKey =
 		"MIICXAIBAAKBgQCJqBZROMIzrWS47vlTYZr1v+Uulq7qhsc58EVdGOQlFMREC55u"
 		"V8E09gEtWf1fVHwToPn6CbmdQYUslUMa7cf2hPY0YtwAKv+TXRRXQGEH0dz0r+Vd"
@@ -28,10 +33,10 @@ namespace CryptoApiTest
 		"Leoj6Q8pVZKllJZ7wTRJJkgQwV2/TESAU+wa8OtGDGM=";
 
 	static const char* const PublicKey =
-		"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCJqBZROMIzrWS47vlTYZr1v+Uu"
-		"lq7qhsc58EVdGOQlFMREC55uV8E09gEtWf1fVHwToPn6CbmdQYUslUMa7cf2hPY0"
-		"YtwAKv+TXRRXQGEH0dz0r+VdbRhrZT/rfiGvR5OMtNreoYXM3Leiq9yVH/as4qs6"
-		"H4wF+Kzck/5DTUiJPQIDAQAB";
+		"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqtYm7J8YuEDHdhgReDi8xke08"
+		"Uthy5SvBK59vdxgFL4TB/tuEEvSEyQnXRMQK7kPchF2sdX9TtHIjgoRhjcNhz2iG"
+		"FTfg/GFXBhkvCmfqt0lukpUBKvNH5X9+E+oghl0QZ6MZaZD0+Rkv01BZfV5OBlQA"
+		"n9MGePirDtcUcLHI2wIDAQAB";
 
 	static const char* const WrongPublicKey =
 		"AAAAB3NzaC1yc2EAAAABJQAAAIEApSVaPhBPsu2NzoJDfjx6HIf6pGBjRz0UXIEv"
@@ -120,7 +125,7 @@ namespace CryptoApiTest
 			}
 		}
 
-		TEST_METHOD(Public_key_is_stored)
+		TEST_METHOD(Public_key_can_be_set)
 		{
 			RsaCryptoProvider c;
 			c.SetPublicKey(PublicKey);
