@@ -125,13 +125,13 @@ namespace CryptoApi
 		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, X509_PUBLIC_KEY_INFO, key.data(),
 								   static_cast<DWORD>(key.size()), 0, NULL, NULL, &blobLen))
 		{
-			ThrowSysError();
+			ThrowSysError("Public key has invalid X.509 or PKCS #7 format");
 		}
 		std::vector<Byte> blobData(blobLen, 0x00);
 		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, X509_PUBLIC_KEY_INFO, key.data(),
 								   static_cast<DWORD>(key.size()), 0, NULL, blobData.data(), &blobLen))
 		{
-			ThrowSysError();
+			ThrowSysError("Public key has invalid X.509 or PKCS #7 format");
 		}
 
 		SetPublicKey(reinterpret_cast<PCERT_PUBLIC_KEY_INFO>(blobData.data()));
@@ -141,7 +141,7 @@ namespace CryptoApi
 	{
 		if (!::CryptImportPublicKeyInfo(_provider, X509_ASN_ENCODING, pKey, &_publicKey))
 		{
-			ThrowSysError();
+			ThrowSysError("Public key is invalid");
 		}
 	}
 
@@ -154,13 +154,13 @@ namespace CryptoApi
 		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, PKCS_RSA_PRIVATE_KEY, buffer.data(),
 								   static_cast<DWORD>(buffer.size()), 0, NULL, nullptr, &blobLen))
 		{
-			ThrowSysError();
+			ThrowSysError("Private key has invalid X.509 or PKCS #7 format");
 		}
 		std::vector<Byte> blobData(blobLen, 0x00);
 		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, PKCS_RSA_PRIVATE_KEY, buffer.data(),
 								   static_cast<DWORD>(buffer.size()), 0, NULL, blobData.data(), &blobLen))
 		{
-			ThrowSysError();
+			ThrowSysError("Private key has invalid X.509 or PKCS #7 format");
 		}
 
 		SetPrivateKey(blobData);
@@ -170,7 +170,7 @@ namespace CryptoApi
 	{
 		if (!::CryptImportKey(_provider, keyBlob.data(), static_cast<DWORD>(keyBlob.size()), 0, CRYPT_OAEP, &_privateKey))
 		{
-			ThrowSysError();
+			ThrowSysError("Private key is invalid");
 		}
 	}
 
@@ -189,13 +189,13 @@ namespace CryptoApi
 		HCRYPTHASH hash;
 		if (!::CryptCreateHash(_provider, CALG_SHA1, 0, 0, &hash))
 		{
-			ThrowSysError();
+			ThrowSysError("Creating hasher failed");
 		}
 
 		if (!::CryptHashData(hash, pData, static_cast<DWORD>(byteLen), 0))
 		{
 			if (hash) ::CryptDestroyHash(hash);
-			ThrowSysError();
+			ThrowSysError("Hashing the data failed");
 		}
 
 		DWORD sigSize = 0;
@@ -203,7 +203,7 @@ namespace CryptoApi
 		{
 			auto code = ::GetLastError();
 			if (hash) ::CryptDestroyHash(hash);
-			ThrowSysError(code);
+			ThrowSysError(code, "Signing the data hash failed");
 		}
 
 		auto result = Signature(sigSize, 0x00);
@@ -212,7 +212,7 @@ namespace CryptoApi
 		{
 			auto code = ::GetLastError();
 			if (hash) ::CryptDestroyHash(hash);
-			ThrowSysError(code);
+			ThrowSysError(code, "Signing the data hash failed");
 		}
 
 		if (hash) ::CryptDestroyHash(hash);
@@ -235,13 +235,13 @@ namespace CryptoApi
 		HCRYPTHASH hash;
 		if (!::CryptCreateHash(_provider, CALG_SHA1, 0, 0, &hash))
 		{
-			ThrowSysError();
+			ThrowSysError("Creating hasher failed");
 		}
 
 		if (!::CryptHashData(hash, pData, static_cast<DWORD>(byteLen), 0))
 		{
 			if (hash) ::CryptDestroyHash(hash);
-			ThrowSysError();
+			ThrowSysError("Hashing the data failed");
 		}
 
 		bool result = false;
@@ -283,7 +283,7 @@ namespace CryptoApi
 			length = dataLen;
 			if (!::CryptEncrypt(_publicKey, 0, true, 0, buffer.data(), &length, buffer.size()))
 			{
-				ThrowSysError();
+				ThrowSysError("Encryption failed");
 			}
 		}
 
@@ -312,7 +312,7 @@ namespace CryptoApi
 			//buffer.resize(length, 0x00);
 			if (!::CryptDecrypt(_privateKey, 0, true, 0, buffer.data(), &length))
 			{
-				ThrowSysError();
+				ThrowSysError("Decryption failed");
 			}
 		}
 
