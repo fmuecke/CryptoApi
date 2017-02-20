@@ -18,25 +18,33 @@ namespace CryptoApiTest
 	//    openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
 
 	static const char* const PrivateKey =
-		"MIICXAIBAAKBgQCJqBZROMIzrWS47vlTYZr1v+Uulq7qhsc58EVdGOQlFMREC55u"
-		"V8E09gEtWf1fVHwToPn6CbmdQYUslUMa7cf2hPY0YtwAKv+TXRRXQGEH0dz0r+Vd"
-		"bRhrZT/rfiGvR5OMtNreoYXM3Leiq9yVH/as4qs6H4wF+Kzck/5DTUiJPQIDAQAB"
-		"AoGAAzuKQqAFl3cT7W/XNQkOvYSjGiP5uZIurYKh7ly+RsylC0AGmWrAI8E/J9R8"
-		"KbfvLfrSw/dkf3fha7mZmNFKp8t/M+Q+EH4Qtq4U/JfWf/W1wDHJPZ5wzX5n7txL"
-		"XeoUOYdoWZ1Um0k8S1mIdNCW6Knmz+Vym8nyWlR949YWweECQQDNgWr5amfpLCti"
-		"1o2EJMZAVYhfmcme2hc/mCr2AHxyjd8QhR6S7HbODj+JbpAIQ+2mwofbdtGeXSP3"
-		"F5xP/AOVAkEAq3rgdZgQVZYRg4ddedl7ljwWDy7mMqTOX6M3baS9fKvrP+J4v+Hs"
-		"yghFY1XXrHQpDxV51TcZUCQX89xzbVCFCQJBAI9z6+y3blnCT3brNlYsJYf7LPsv"
-		"KyMMMnZeDn8yz6xXhILPqgv9rOEh6RBScZCTem2SFawJQUI+2kA95wuebBECQAfO"
-		"yHmSOuwqsRF0EGWD6YSlp7t5PzH/HwZrwBJV9eq/SS7XePgDqWxpg/9J4VAQ2e29"
-		"5JY4tAZaHl0UJI1NpUECQD+xr3LYPtw0mPp/Gulx2f4CgalFCI/GAEtU/GGFMd2a"
-		"Leoj6Q8pVZKllJZ7wTRJJkgQwV2/TESAU+wa8OtGDGM=";
+		"MIICXwIBAAKBgQC81ttq65As+LUndLlVr2lWhb/GWjdAGgf8i9NUO5dJNeokXVMB"
+		"X71Y6R5Vm3+w0pgI6ffnlbHCcSyohxg9a6ud6CWlKw/XtXiaJNmL/2lfj81nep5W"
+		"sYtReoV7AncK+q98YMJOrgKMd56PHwjonqrS+s+0IZmi+HZHZaBahwelmQIDAQAB"
+		"AoGBAIGDirFmJlfxq60H7STLTZ+9062iqkoYkGmxLJuU00mu5ItURl2m4CJeoCNu"
+		"psELbqKOdSwsCuKk5FAhd4qIkgZnSGyKJ40bv0RLNe88anezULt9yPi0IVfjL1wK"
+		"J6xgtorH7+ZShxVwwW/oIRpZXpp/wPUITwissZhXOVauuc4BAkEA90APq88HCqqC"
+		"xV5xz5n6+oKJDsjlfThwrVRIhEKxSezvcp0hMsOSEq9OEKhn93Lknek+EptPUZyX"
+		"gCCLYBxp8QJBAMOFoLDqy3/taokXNmxDd0blxQcinPB3t2GNVOKPcM/XMZs6CHJx"
+		"tqom/2PNou0ESQtMc3/yFljmjY88y/wnjikCQQDoRsZyIYv7+TPhN1i0L3QY44je"
+		"2ty9RsiUDRoTJpRnXq+UfQkzJ4eTBh3QiGUjkkw0DWrDECT0BqhNNkW5hPgBAkEA"
+		"tCL9NYJdEvPN35g/T+eokO1IZZaCORpTHdF0j3fQW+zLi1QgTDBwNrvPOEhQ/0Wf"
+		"doVtNEf6RtXDPmCpHxviYQJBAKPBcusnPfO9JSKqOkH2C0mAjiMyxAR0BbSBAgFf"
+		"9qWkZi6S/pULWn2rlBDCheiMpbUBABMZMqRW5ifUEJKh2HM=";
 
 	static const char* const PublicKey =
-		"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqtYm7J8YuEDHdhgReDi8xke08"
-		"Uthy5SvBK59vdxgFL4TB/tuEEvSEyQnXRMQK7kPchF2sdX9TtHIjgoRhjcNhz2iG"
-		"FTfg/GFXBhkvCmfqt0lukpUBKvNH5X9+E+oghl0QZ6MZaZD0+Rkv01BZfV5OBlQA"
-		"n9MGePirDtcUcLHI2wIDAQAB";
+		"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC81ttq65As+LUndLlVr2lWhb/G"
+		"WjdAGgf8i9NUO5dJNeokXVMBX71Y6R5Vm3+w0pgI6ffnlbHCcSyohxg9a6ud6CWl"
+		"Kw/XtXiaJNmL/2lfj81nep5WsYtReoV7AncK+q98YMJOrgKMd56PHwjonqrS+s+0"
+		"IZmi+HZHZaBahwelmQIDAQAB";
+
+	static const char* const PublicKeyWithHeader =
+		"-----BEGIN PUBLIC KEY-----"
+		"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC81ttq65As+LUndLlVr2lWhb/G"
+		"WjdAGgf8i9NUO5dJNeokXVMBX71Y6R5Vm3+w0pgI6ffnlbHCcSyohxg9a6ud6CWl"
+		"Kw/XtXiaJNmL/2lfj81nep5WsYtReoV7AncK+q98YMJOrgKMd56PHwjonqrS+s+0"
+		"IZmi+HZHZaBahwelmQIDAQAB"
+		"-----END PUBLIC KEY-----";
 
 	static const char* const WrongPublicKey =
 		"AAAAB3NzaC1yc2EAAAABJQAAAIEApSVaPhBPsu2NzoJDfjx6HIf6pGBjRz0UXIEv"
@@ -45,7 +53,7 @@ namespace CryptoApiTest
 		"O0eD2BM=";
 
 	static const char* const SampleText = "Cryptography can really be \n that \t simple!\n\nThe end...";
-	static const char* const EncryptedSampleTextB64 = "AcBMBSnJ9CdvDQZzQch7edbIl1Ml4ouCDvTqSXhqGpfxth9S9eLJQ4pLtU5xHBm/Jw2V2Urhb5PKD4e60cmbj4ReX9Yz6ANlor1clLRdkODnUu0s68VnIqUz9BXyYIuOdMO8QGe4yG1qzlpr3zr4+HFmvnb7hEhKHuyAhrvn+HM=";
+	static const char* const EncryptedSampleTextB64 = "0i3OP0Q5aq7lkUhPrRA9Ae5x8NyV+0v56vlXKrwdjWs+X0ADD3GZcaVW2znrgJ/5Od/zYxcfNhEaAnarKrXchJ9Z1yDhB3fy60w9m1yBKwIiWsQxRasMWgwuT/UAHcfdN/G+8NUc96KaQzICaS580INXHlHRWedsa435CUfJBa4=";
 
 	TEST_CLASS(RsaCryptoProviderTest)
 	{
@@ -62,7 +70,9 @@ namespace CryptoApiTest
 			RsaCryptoProvider p;
 			p.SetPrivateKey(PrivateKey);
 			p.SetPublicKey(PublicKey);
+			Assert::IsTrue(p.VerifyData("Hallo Welt!", 11, p.SignData("Hallo Welt!", 11)));
 
+			p.SetPublicKey(PublicKeyWithHeader);
 			Assert::IsTrue(p.VerifyData("Hallo Welt!", 11, p.SignData("Hallo Welt!", 11)));
 		}
 
@@ -134,23 +144,20 @@ namespace CryptoApiTest
 			Assert::IsTrue(c._provider != 0, L"There should be a valid provider, if the key was set properly");
 		}
 
-		//TEST_METHOD(Encrypt_returns_expected_result)
-		//{
-		//	RsaCryptoProvider c;
-		//	c.ImportPrivateKeyFromText(TestPrivateKey);
-		//	auto s = std::string(SampleText);
-		//	auto encrypted = c.Encrypt(s);
-		//	auto b64 = Base64::Encode(encrypted.data(), encrypted.size());
-
-		//	auto decrypted = Base64::Decode(
-		//	Assert::AreEqual(std::string(EncryptedSampleTextB64), b64);
-		//}
+		TEST_METHOD(Encrypt_returns_differnt_result_each_time)
+		{
+			RsaCryptoProvider c;
+			c.SetPublicKey(PublicKey);
+			auto s = std::string(SampleText);
+			auto encrypted1 = c.Encrypt(s.c_str(), s.size());
+			auto encrypted2 = c.Encrypt(s.c_str(), s.size());
+			Assert::IsFalse(std::equal(encrypted1.begin(), encrypted1.end(), encrypted2.begin()));
+		}
 
 		TEST_METHOD(Decrypt_stored_data_returns_expected_result)
 		{
 			RsaCryptoProvider c;
 			c.SetPrivateKey(PrivateKey);
-			c.SetPublicKey(PublicKey);
 			auto data = Base64::Decode(EncryptedSampleTextB64);
 			auto decrypted = c.Decrypt(data);
 			Assert::AreEqual(std::string(SampleText), decrypted);

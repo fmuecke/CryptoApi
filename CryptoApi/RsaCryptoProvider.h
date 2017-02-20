@@ -39,11 +39,11 @@ namespace CryptoApi
 		// private key must be imported first
 		inline std::string Decrypt(std::vector<Byte> const& data) const;
 
-		// set public key from plain text (x509 or PKCS-7 encoding)
+		// set public key from plain text (x509 or PKCS-7 encoding with/without header)
 		inline void SetPublicKey(std::string const& data);
 		inline void SetPublicKey(PCERT_PUBLIC_KEY_INFO pKey);
 
-		// set privata key from plain text (x509 or PKCS-7 encoding)
+		// set privata key from plain text (x509 or PKCS-7 encoding with/without header)
 		inline void SetPrivateKey(std::string const& key);
 		inline void SetPrivateKey(std::vector<Byte> const& keyBlob);
 
@@ -70,6 +70,8 @@ namespace CryptoApi
 		//HCRYPTKEY PublicKey() const { return _publicKey; }
 
 	private:
+		inline void DestroyKey(HCRYPTKEY& key);
+
 		HCRYPTPROV _provider{ 0 };
 		HCRYPTKEY _publicKey{ 0 };
 		HCRYPTKEY _privateKey{ 0 };
@@ -99,16 +101,8 @@ namespace CryptoApi
 
 	RsaCryptoProvider::~RsaCryptoProvider()
 	{
-		if (_publicKey)
-		{
-			::CryptDestroyKey(_publicKey);
-			_publicKey = 0;
-		}
-		if (_privateKey)
-		{
-			::CryptDestroyKey(_privateKey);
-			_privateKey = 0;
-		}
+		DestroyKey(_publicKey);
+		DestroyKey(_privateKey);
 		if (_provider)
 		{
 			::CryptReleaseContext(_provider, 0);
@@ -116,20 +110,38 @@ namespace CryptoApi
 		}
 	}
 
-	// set public key from plain text (x509 or PKCS-7 encoding)
-	inline void RsaCryptoProvider::SetPublicKey(std::string const& data)
+	inline void RsaCryptoProvider::DestroyKey(HCRYPTKEY& key)
 	{
-		auto key = CryptoApi::Base64::Decode(data);
+		if (key)
+		{
+			::CryptDestroyKey(key);
+			key = 0;
+		}
+	}
+
+	inline void RsaCryptoProvider::SetPublicKey(std::string const& key)
+	{
+		DWORD keySize = 0;
+		if (!::CryptStringToBinaryA(key.data(), key.size(), CRYPT_STRING_BASE64_ANY, nullptr, &keySize, nullptr, nullptr))
+		{
+			ThrowSysError("Invalid public key");
+		}
+
+		std::vector<Byte> binaryKey(keySize, 0x00);
+		if (!::CryptStringToBinaryA(key.data(), key.size(), CRYPT_STRING_BASE64_ANY, binaryKey.data(), &keySize, nullptr, nullptr))
+		{
+			ThrowSysError("Invalid public key");
+		}
 
 		DWORD blobLen{ 0 };
-		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, X509_PUBLIC_KEY_INFO, key.data(),
-								   static_cast<DWORD>(key.size()), 0, NULL, NULL, &blobLen))
+		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, X509_PUBLIC_KEY_INFO, binaryKey.data(),
+								   static_cast<DWORD>(binaryKey.size()), 0, NULL, NULL, &blobLen))
 		{
 			ThrowSysError("Public key has invalid X.509 or PKCS #7 format");
 		}
 		std::vector<Byte> blobData(blobLen, 0x00);
-		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, X509_PUBLIC_KEY_INFO, key.data(),
-								   static_cast<DWORD>(key.size()), 0, NULL, blobData.data(), &blobLen))
+		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, X509_PUBLIC_KEY_INFO, binaryKey.data(),
+								   static_cast<DWORD>(binaryKey.size()), 0, NULL, blobData.data(), &blobLen))
 		{
 			ThrowSysError("Public key has invalid X.509 or PKCS #7 format");
 		}
@@ -139,6 +151,8 @@ namespace CryptoApi
 
 	inline void RsaCryptoProvider::SetPublicKey(PCERT_PUBLIC_KEY_INFO pKey)
 	{
+		DestroyKey(_publicKey);
+
 		if (!::CryptImportPublicKeyInfo(_provider, X509_ASN_ENCODING, pKey, &_publicKey))
 		{
 			ThrowSysError("Public key is invalid");
@@ -147,18 +161,27 @@ namespace CryptoApi
 
 	inline void RsaCryptoProvider::SetPrivateKey(std::string const& key)
 	{
-		auto buffer = CryptoApi::Base64::Decode(key);
+		DWORD keySize = 0;
+		if (!::CryptStringToBinaryA(key.data(), key.size(), CRYPT_STRING_BASE64_ANY, nullptr, &keySize, nullptr, nullptr))
+		{
+			ThrowSysError("Invalid private key");
+		}
 
-		// first, parse private key struct
+		std::vector<Byte> binaryKey(keySize, 0x00);
+		if (!::CryptStringToBinaryA(key.data(), key.size(), CRYPT_STRING_BASE64_ANY, binaryKey.data(), &keySize, nullptr, nullptr))
+		{
+			ThrowSysError("Invalid private key");
+		}
+
 		DWORD blobLen{ 0 };
-		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, PKCS_RSA_PRIVATE_KEY, buffer.data(),
-								   static_cast<DWORD>(buffer.size()), 0, NULL, nullptr, &blobLen))
+		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, PKCS_RSA_PRIVATE_KEY, binaryKey.data(),
+								   static_cast<DWORD>(binaryKey.size()), 0, NULL, nullptr, &blobLen))
 		{
 			ThrowSysError("Private key has invalid X.509 or PKCS #7 format");
 		}
 		std::vector<Byte> blobData(blobLen, 0x00);
-		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, PKCS_RSA_PRIVATE_KEY, buffer.data(),
-								   static_cast<DWORD>(buffer.size()), 0, NULL, blobData.data(), &blobLen))
+		if (!::CryptDecodeObjectEx(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, PKCS_RSA_PRIVATE_KEY, binaryKey.data(),
+								   static_cast<DWORD>(binaryKey.size()), 0, NULL, blobData.data(), &blobLen))
 		{
 			ThrowSysError("Private key has invalid X.509 or PKCS #7 format");
 		}
@@ -168,6 +191,8 @@ namespace CryptoApi
 
 	inline void RsaCryptoProvider::SetPrivateKey(std::vector<Byte> const& keyBlob)
 	{
+		DestroyKey(_privateKey);
+
 		if (!::CryptImportKey(_provider, keyBlob.data(), static_cast<DWORD>(keyBlob.size()), 0, CRYPT_OAEP, &_privateKey))
 		{
 			ThrowSysError("Private key is invalid");
@@ -244,10 +269,17 @@ namespace CryptoApi
 			ThrowSysError("Hashing the data failed");
 		}
 
-		bool result = false;
-		if (::CryptVerifySignature(hash, signature.data(), static_cast<DWORD>(signature.size()), _publicKey, nullptr, CRYPT_NOHASHOID))
+		bool result = true;
+		if (!::CryptVerifySignature(hash, signature.data(), static_cast<DWORD>(signature.size()), _publicKey, nullptr, CRYPT_NOHASHOID))
 		{
-			result = true;
+			auto code = ::GetLastError();
+			if (code != NTE_BAD_SIGNATURE)
+			{
+				if (hash) ::CryptDestroyHash(hash);
+				ThrowSysError(code, "Signature verification failed");
+			}
+
+			result = false;
 		}
 
 		if (hash) ::CryptDestroyHash(hash);
@@ -264,7 +296,7 @@ namespace CryptoApi
 	{
 		if (!_publicKey)
 		{
-			return std::vector<Byte>();
+			throw std::runtime_error("No public key specified");
 		}
 
 		unsigned long length = dataLen;
@@ -294,7 +326,7 @@ namespace CryptoApi
 	{
 		if (!_privateKey)
 		{
-			return std::string();
+			throw std::runtime_error("No private key specified");
 		}
 
 		unsigned long length = data.size();

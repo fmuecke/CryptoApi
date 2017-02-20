@@ -9,22 +9,26 @@ namespace CryptoApi
 	static void ThrowSysError()
 	{
 		auto code = ::GetLastError();
-		throw std::system_error(code, std::system_category());
+		auto err = std::error_code(code, std::system_category());
+		throw std::system_error(err);
 	}
 
 	static void ThrowSysError(const char* msg)
 	{
 		auto code = ::GetLastError();
-		throw std::system_error(std::error_code(code, std::system_category()), msg);
+		auto err = std::error_code(code, std::system_category());
+		throw std::system_error(err, msg);
 	}
 
 	static void ThrowSysError(unsigned int code)
 	{
-		throw std::system_error(code, std::system_category());
+		auto err = std::error_code(code, std::system_category());
+		throw std::system_error(err);
 	}
 
 	static void ThrowSysError(unsigned int code, const char* msg)
 	{
-		throw std::system_error(std::error_code(code, std::system_category()), msg);
+		auto err = std::error_code(code, std::system_category());
+		throw std::system_error(err, msg);
 	}
 }
