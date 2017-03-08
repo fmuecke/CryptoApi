@@ -146,6 +146,7 @@ namespace CryptoApi
 			ThrowSysError("Public key has invalid X.509 or PKCS #7 format");
 		}
 
+#pragma warning(suppress: 26490)
 		SetPublicKey(reinterpret_cast<PCERT_PUBLIC_KEY_INFO>(blobData.data()));
 	}
 
@@ -201,6 +202,7 @@ namespace CryptoApi
 
 	inline RsaCryptoProvider::Signature RsaCryptoProvider::SignData(const char* pData, size_t byteLen) const
 	{
+#pragma warning(suppress: 26490)
 		return SignData(reinterpret_cast<const Byte*>(pData), byteLen);
 	}
 
@@ -247,6 +249,7 @@ namespace CryptoApi
 
 	inline bool RsaCryptoProvider::VerifyData(const char* pData, size_t byteLen, Signature const& signature) const
 	{
+#pragma warning(suppress: 26490)
 		return VerifyData(reinterpret_cast<const Byte*>(pData), byteLen, signature);
 	}
 
@@ -289,6 +292,7 @@ namespace CryptoApi
 
 	inline std::vector<RsaCryptoProvider::Byte> RsaCryptoProvider::Encrypt(const char* pData, size_t dataLen) const
 	{
+#pragma warning(suppress: 26490)
 		return Encrypt(reinterpret_cast<const Byte*>(pData), dataLen);
 	}
 

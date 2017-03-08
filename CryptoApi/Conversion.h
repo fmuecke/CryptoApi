@@ -9,7 +9,7 @@ namespace CryptoApi
 	{
 		static std::string BinaryToHex(const unsigned char* pData, unsigned int dataLen)
 		{
-			const char* NibbleToHex = { "0123456789ABCDEF" };
+			static const char* NibbleToHex = { "0123456789ABCDEF" };
 			if (dataLen > 0)
 			{
 				if (pData)
@@ -30,6 +30,7 @@ namespace CryptoApi
 
 		static std::string BinaryToHex(const char* pData, unsigned int dataLen)
 		{
+#pragma warning(suppress: 26490)
 			return BinaryToHex(reinterpret_cast<const unsigned char*>(pData), dataLen);
 		}
 
@@ -74,8 +75,8 @@ namespace CryptoApi
 
 			for (unsigned int i = 0; i < dataLen; i += 2)
 			{
-				auto left_nibble = _detail::hex_char_to_byte(pData[i]);
-				auto right_nibble = _detail::hex_char_to_byte(pData[i + 1]);
+				const auto left_nibble = _detail::hex_char_to_byte(pData[i]);
+				const auto right_nibble = _detail::hex_char_to_byte(pData[i + 1]);
 				auto byte = (left_nibble << 4) + right_nibble;
 				result.push_back(byte);
 			}

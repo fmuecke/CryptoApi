@@ -9,6 +9,7 @@ using namespace std;
 
 namespace CryptoApiTest
 {
+#pragma warning(suppress: 26490)
 	static const unsigned char* bytePtr(std::string const& s) { return reinterpret_cast<const unsigned char*>(s.data()); }
 
 	TEST_CLASS(Base64Test)

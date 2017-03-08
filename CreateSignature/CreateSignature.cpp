@@ -27,7 +27,7 @@ static vector<BYTE> read_file(const char* filename)
 
 	// reserve capacity
 	vector<BYTE> result;
-	result.reserve(fileSize);
+	result.reserve(static_cast<size_t>(fileSize));
 
 	// read the data:
 	result.insert(result.begin(), istream_iterator<BYTE>(file), istream_iterator<BYTE>());
