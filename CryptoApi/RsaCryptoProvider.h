@@ -83,11 +83,11 @@ namespace CryptoApi
 
 	RsaCryptoProvider::RsaCryptoProvider()
 	{
-		if (!::CryptAcquireContext(&_provider, nullptr, MS_DEF_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+		if (!::CryptAcquireContext(&_provider, nullptr, MS_ENH_RSA_AES_PROV, PROV_RSA_AES, CRYPT_VERIFYCONTEXT))
 		{
 			if (::GetLastError() == NTE_BAD_KEYSET)
 			{
-				if (!::CryptAcquireContext(&_provider, nullptr, MS_DEF_PROV, PROV_RSA_FULL, CRYPT_NEWKEYSET))
+				if (!::CryptAcquireContext(&_provider, nullptr, MS_ENH_RSA_AES_PROV, PROV_RSA_AES, CRYPT_NEWKEYSET))
 				{
 					// Could not create a new key container
 				}
@@ -214,7 +214,7 @@ namespace CryptoApi
 		}
 
 		HCRYPTHASH hash;
-		if (!::CryptCreateHash(_provider, CALG_SHA1, 0, 0, &hash))
+		if (!::CryptCreateHash(_provider, CALG_SHA_256, 0, 0, &hash))
 		{
 			ThrowSysError("Creating hasher failed");
 		}
@@ -261,7 +261,7 @@ namespace CryptoApi
 		}
 
 		HCRYPTHASH hash;
-		if (!::CryptCreateHash(_provider, CALG_SHA1, 0, 0, &hash))
+		if (!::CryptCreateHash(_provider, CALG_SHA_256, 0, 0, &hash))
 		{
 			ThrowSysError("Creating hasher failed");
 		}
