@@ -16,13 +16,11 @@ namespace CryptoApi
 {
 	namespace Hashing
 	{
-		//
-		// WARNING: requires at least Windows 10
-		//
 		static std::string CreateSha1(std::string const& str)
 		{
 			std::string retVal;
 			BCRYPT_ALG_HANDLE hAlg{ 0 };
+			BCRYPT_HASH_HANDLE hHash{ 0 };
 
 			try
 			{
@@ -31,36 +29,29 @@ namespace CryptoApi
 				if (!BCRYPT_SUCCESS(status = ::BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_SHA1_ALGORITHM, nullptr, 0)))
 					ThrowSysError(status);
 				
-				// calculate hash
-				std::vector<unsigned char> hashValue(20, 0); // SHA1
-				if (!BCRYPT_SUCCESS(status = ::BCryptHash(hAlg, nullptr, 0, const_cast<PUCHAR>(reinterpret_cast<const unsigned char*>(str.data())), str.size(), hashValue.data(), hashValue.size()-2)))
-					ThrowSysError(status);
-
-				/* 
-				
-				USE THIS FOR SUPPORT OF WINDOWS VISTA+ instead of BCryptHash
-
 				// calculate the size of the buffer to hold the hash object
+				ULONG bytesRead{ 0 };
 				ULONG hashObjSize{ 0 };
-				if (!BCRYPT_SUCCESS(status = ::BCryptGetProperty(hAlg, BCRYPT_OBJECT_LENGTH, nullptr, 0, &hashObjSize, 0)))
+				if (!BCRYPT_SUCCESS(status = ::BCryptGetProperty(hAlg, BCRYPT_OBJECT_LENGTH, reinterpret_cast<unsigned char*>(&hashObjSize), sizeof(hashObjSize), &bytesRead, 0)))
 					ThrowSysError(status);
 
-				// calculate the length of the hash
+				// calculate the length of the hash (should be 20 for sha1)
 				ULONG hashSize{ 0 };
-				if (!BCRYPT_SUCCESS(status = ::BCryptGetProperty(hAlg, BCRYPT_HASH_LENGTH, nullptr, 0, &hashSize, 0)))
+				if (!BCRYPT_SUCCESS(status = ::BCryptGetProperty(hAlg, BCRYPT_HASH_LENGTH, reinterpret_cast<unsigned char*>(&hashSize), sizeof(hashSize), &bytesRead, 0)))
 					ThrowSysError(status);
 
-				// create the hash
-				BCRYPT_HASH_HANDLE hHash{ 0 };
-				std::vector<unsigned char> hashObject(hashObjSize, 0x00);
-				if (!BCRYPT_SUCCESS(status = ::BCryptCreateHash(hAlg, &hHash, hashObject.data(), hashObject.size(), nullptr, 0, 0)))
+				// create the hash object
+				std::vector<unsigned char> hashObj(hashObjSize, 0x00);
+				if (!BCRYPT_SUCCESS(status = ::BCryptCreateHash(hAlg, &hHash, hashObj.data(), hashObj.size(), nullptr, 0, 0)))
 					ThrowSysError(status);
 
 				// hash the data
-				if (!BCRYPT_SUCCESS(status = ::BCryptHashData(hHash, reinterpret_cast<PUCHAR>(str.data()), str.size(), 0)))
+				if (!BCRYPT_SUCCESS(status = ::BCryptHashData(hHash, const_cast<PUCHAR>(reinterpret_cast<const unsigned char*>(str.data())), str.size(), 0)))
 					ThrowSysError(status);
-				*/
 
+				std::vector<unsigned char> hashValue(hashSize, 0x00);
+				if (!BCRYPT_SUCCESS(status = ::BCryptFinishHash(hHash, hashValue.data(), hashValue.size(), 0)))
+					ThrowSysError(status);
 			
 				// convert to hex chars
 				std::stringstream ss;
@@ -72,16 +63,19 @@ namespace CryptoApi
 				}
 				retVal = ss.str();
 
+				if (hHash)
+					::BCryptDestroyHash(hHash);
 
-				if (hAlg) 
+				if (hAlg)
 					::BCryptCloseAlgorithmProvider(hAlg, 0);
 				
 				return retVal;
 			}
-			catch (std::system_error& err)
+			catch (std::system_error&)
 			{
-				auto m = err.what();
-				auto c = err.code();
+				if (hHash)
+					::BCryptDestroyHash(hHash);
+
 				if (hAlg)
 					::BCryptCloseAlgorithmProvider(hAlg, 0);
 
