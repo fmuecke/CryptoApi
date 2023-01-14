@@ -46,7 +46,7 @@ namespace CryptoApi
 
 				if (::CryptStringToBinaryA(base64data.data(), static_cast<DWORD>(base64data.size()), CRYPT_STRING_BASE64, &result[0], &decodedSize, nullptr, nullptr))
 				{
-					return std::move(result);
+					return result;
 				}
 			}
 

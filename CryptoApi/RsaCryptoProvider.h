@@ -244,7 +244,7 @@ namespace CryptoApi
 
 		if (hash) ::CryptDestroyHash(hash);
 
-		return std::move(result);
+		return result;
 	}
 
 	inline bool RsaCryptoProvider::VerifyData(const char* pData, size_t byteLen, Signature const& signature) const
@@ -323,7 +323,7 @@ namespace CryptoApi
 			}
 		}
 
-		return std::move(buffer);
+		return buffer;
 	}
 
 	inline std::string RsaCryptoProvider::Decrypt(std::vector<RsaCryptoProvider::Byte> const& data) const
@@ -334,7 +334,7 @@ namespace CryptoApi
 		}
 
 		unsigned long length = data.size();
-		auto buffer = std::vector<unsigned char>(length, 0);
+		std::vector<unsigned char> buffer(length, 0);
 		std::copy(std::begin(data), std::end(data), std::begin(buffer));
 
 		if (!::CryptDecrypt(_privateKey, 0, true, 0, buffer.data(), &length))
@@ -352,6 +352,6 @@ namespace CryptoApi
 			}
 		}
 
-		return std::move(std::string(std::begin(buffer), std::begin(buffer) + length));
+		return std::string(std::begin(buffer), std::begin(buffer) + length);
 	}
 }

@@ -32,7 +32,7 @@ static vector<BYTE> read_file(const char* filename)
 	// read the data:
 	result.insert(result.begin(), istream_iterator<BYTE>(file), istream_iterator<BYTE>());
 
-	return std::move(result);
+	return result;
 }
 
 static void Usage()
